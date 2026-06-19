@@ -1,0 +1,34 @@
+# Конфигурация сервиса. Любое значение переопределяется переменной окружения
+# с префиксом APP_ и путём через двойное подчёркивание, например:
+#   APP_HTTP__PORT=9090  APP_MYSQL__DSN=...  APP_AUTH__JWT_SECRET=...
+http:
+  port: 8080
+  read_timeout: 10s
+  write_timeout: 10s
+  shutdown_timeout: 15s
+
+mysql:
+  dsn: "app:app@tcp(localhost:3306)/taskservice?parseTime=true&charset=utf8mb4&loc=UTC"
+  max_open_conns: 25
+  max_idle_conns: 25
+  conn_max_lifetime: 5m
+  conn_max_idle_time: 5m
+
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  task_list_ttl: 5m
+
+auth:
+  jwt_secret: "change-me-in-production"
+  token_ttl: 24h
+
+ratelimit:
+  requests_per_minute: 100
+
+email:
+  # Параметры circuit breaker вокруг мок-сервиса email.
+  failure_threshold: 3
+  open_timeout: 10s
+  fail_rate: 0.0 # вероятность сбоя мока [0..1] — для демонстрации circuit breaker
